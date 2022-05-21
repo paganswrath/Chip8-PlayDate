@@ -19,23 +19,11 @@ const unsigned char FontSet[80] = {
 	0xF0, 0x80, 0xF0, 0x80, 0x80		// F
 };
 
-
-auto InitMemory(){
-	memset(SystemMemory , 0 , sizeof(SystemMemory));
-	memset(SystemStack , 0 , sizeof(SystemStack));
-	memset(SystemRegisters , 0 , sizeof(SystemRegisters));
-    SystemIRegister = 0x00;
-    SystemProgramCounter = 0x200;
-
-    for (int i = 0; i < 80; i++) {
-		SystemMemory[i] = FontSet[i];
-	}
-
-	int FileSize = 0;
-
+void LoadRom(const char *Path){
 	SDFile* Rom = NULL;
+	int FileSize = 0;
 	
-	Rom = pd->file->open("Rom.bin", kFileReadData);
+	Rom = pd->file->open(Path, kFileRead);
 
 	pd->file->seek(Rom, 0, SEEK_END);
 	FileSize = pd->file->tell(Rom);
@@ -44,7 +32,6 @@ auto InitMemory(){
 	pd->file->read(Rom, SystemMemory + 0x200, FileSize);
 
 	if (Rom != NULL){
-		RomLoaded = true;
 		pd->system->logToConsole("Loaded Rom Successfully");
 	}
 	else {
@@ -52,5 +39,21 @@ auto InitMemory(){
 	}
 	
 	pd->file->close(Rom);
+
+	RomLoaded = true;
+}
+
+
+auto InitMemory(){
+	memset(SystemMemory , 0 , sizeof(SystemMemory));
+	memset(SystemStack , 0 , sizeof(SystemStack));
+	memset(SystemRegisters , 0 , sizeof(SystemRegisters));
+    SystemIRegister = 0x00;
+    SystemProgramCounter = 0x200;
+	SystemKey = 0;
+
+    for (int i = 0; i < 80; i++) {
+		SystemMemory[i] = FontSet[i];
+	}
 }
 

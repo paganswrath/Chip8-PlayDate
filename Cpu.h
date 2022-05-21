@@ -36,7 +36,7 @@ static unsigned char SystemKey = 0x0006;
 void RunCycle(){
 
 	if (SystemDelayTimer > 0) {
-		--(SystemDelayTimer);
+		SystemDelayTimer -= 10;
 		
 	}
 	if (SystemSoundTimer > 0) {
