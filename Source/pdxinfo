@@ -1,0 +1,5 @@
+name=Chip8PD
+author=PixelPhobicGames
+description=A Chip 8 Emulator
+bundleID=com.pixelphobicgames.chip8pd
+imagePath=

@@ -1,0 +1,6 @@
+pdxversion=11000
+buildtime=70600000
+name=Chip8PD
+author=PixelPhobicGames
+description=A Chip 8 Emulator For the PlayDate
+bundleID=com.pixelphobicgames.chip8pd
