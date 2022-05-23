@@ -12,8 +12,6 @@ __declspec(dllexport)
 
 bool LoadFlag = true;
 
-static int XOff = 7;
-static int YOff = 24;
 static int Cursor = 0;
 static int Delay = 0;
 static int GameID = 0;
