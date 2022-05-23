@@ -1,22 +1,19 @@
 #include <stdbool.h>
+#include <sys/time.h>
 
 #include "pd_api.h"
 
-PlaydateAPI* pd = NULL;
+PlaydateAPI* PD = NULL;
 
-#include <sys/time.h>
-
-int _gettimeofday( struct timeval *tv, void *tzvp )
+int _gettimeofday( struct timeval *tv, void *tzvp ) // Needs This To Compile ?
 {
-    uint64_t t = time(NULL);  // get uptime in nanoseconds
-    tv->tv_sec = t / 1000000000;  // convert to seconds
-    tv->tv_usec = ( t % 1000000000 ) / 1000;  // get remaining microseconds
-    return 0;  // return non-zero for error
+    uint64_t t = time(NULL);  
+    tv->tv_sec = t / 1000000000; 
+    tv->tv_usec = ( t % 1000000000 ) / 1000; 
+    return 0; 
 }
 
 #define F 15
-
-bool RomLoaded = false;
 
 static unsigned char ScreenMemory[64][32];
 
@@ -31,23 +28,21 @@ static unsigned char SystemDelayTimer = 0 ;
 static unsigned char SystemSoundTimer = 0;
 static unsigned char SystemKey = 0x0006;
 
-
+bool RomLoaded = false;
 
 void RunCycle(){
+	SystemDelayTimer = 0;
 
-	if (SystemDelayTimer > 0) {
-		SystemDelayTimer = 0;
-		
-	}
 	if (SystemSoundTimer > 0) {
 		--(SystemSoundTimer);
 		if (SystemSoundTimer == 0) {
-            
+            // Play Noise Here
         }
 	}
 
     bool JumpFlag = false;
-    int i, j;
+    int i;
+	int j;
 	unsigned short Opcode;
     unsigned short JumpAddress;
 	unsigned char X, Y, NN;
