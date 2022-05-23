@@ -4,7 +4,10 @@
 
 #include "pd_api.h"
 
+
 PlaydateAPI* PD = NULL;
+
+#define SystemFRegister 15
 
 int _gettimeofday( struct timeval *tv, void *tzvp ) // Needs This To Compile ?
 {
@@ -13,8 +16,6 @@ int _gettimeofday( struct timeval *tv, void *tzvp ) // Needs This To Compile ?
     tv->tv_usec = ( t % 1000000000 ) / 1000; 
     return 0; 
 }
-
-#define F 15
 
 static unsigned char ScreenMemory[64][32];
 
@@ -111,42 +112,42 @@ void RunCycle(){
 					break;
 				case 0x0004:
 					if (SystemRegisters[X] + SystemRegisters[Y] > 255) {
-						SystemRegisters[F] = 1;
+						SystemRegisters[SystemFRegister] = 1;
 					} else {
-						SystemRegisters[F] = 0;
+						SystemRegisters[SystemFRegister] = 0;
 					}
 					SystemRegisters[X] += SystemRegisters[Y];
 					break;
 				case 0x0005:
 					if (SystemRegisters[X] < SystemRegisters[Y]) {
-						SystemRegisters[F] = 0;
+						SystemRegisters[SystemFRegister] = 0;
 					} else {
-						SystemRegisters[F] = 1;
+						SystemRegisters[SystemFRegister] = 1;
 					}
 					SystemRegisters[X] -= SystemRegisters[Y];
 					break;
 				case 0x0006:
 					if (SystemRegisters[X] % 2 == 0) {
-						SystemRegisters[F] = 0;
+						SystemRegisters[SystemFRegister] = 0;
 					} else {
-						SystemRegisters[F] = 1;
+						SystemRegisters[SystemFRegister] = 1;
 					}
 					SystemRegisters[X] = SystemRegisters[X] >> 1;
 					break;
 				case 0x0007:
 					if (SystemRegisters[Y] < SystemRegisters[X]) {
-						SystemRegisters[F] = 0;
+						SystemRegisters[SystemFRegister] = 0;
 					}
 					else {
-						SystemRegisters[F] = 1;
+						SystemRegisters[SystemFRegister] = 1;
 					}
 					SystemRegisters[X] = SystemRegisters[Y] - SystemRegisters[X];
 					break;
 				case 0x000E:
 					if (SystemRegisters[X] < 128) {
-						SystemRegisters[F] = 0;
+						SystemRegisters[SystemFRegister] = 0;
 					} else {
-						SystemRegisters[F] = 1;
+						SystemRegisters[SystemFRegister] = 1;
 					}
 					SystemRegisters[X] = SystemRegisters[X] << 1;
 					break;
@@ -173,7 +174,7 @@ void RunCycle(){
 			
 			int Ands[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
 
-			SystemRegisters[F] = 0;
+			SystemRegisters[SystemFRegister] = 0;
 			for (i = 0; i < Height; i++) {
 				for (j = 0; j < 8; j++) {
 					if (XCoord + j == 64) {
@@ -184,7 +185,7 @@ void RunCycle(){
 					}
 					if (ScreenMemory[XCoord + j][YCoord + i] == 1 &&
 						((SystemMemory[SystemIRegister + i] & Ands[j]) >> (8 - j - 1)) == 1) {
-						SystemRegisters[F] = 1;
+						SystemRegisters[SystemFRegister] = 1;
 					}
 					ScreenMemory[XCoord + j][YCoord + i] = ScreenMemory[XCoord + j][YCoord + i] ^ 
 						((SystemMemory[SystemIRegister + i] & Ands[j]) >> (8 - j - 1));

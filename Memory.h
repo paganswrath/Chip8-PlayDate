@@ -50,7 +50,7 @@ void InitMemory(){
 	memset(SystemRegisters , 0 , sizeof(SystemRegisters));
 
     SystemIRegister = 0x00;
-    SystemProgramCounter = 0x200; // Sets it to 512
+    SystemProgramCounter = 0x200; // Sets it to 512 Where Rom Starts 
 	SystemKey = 0;
 
     for (int i = 0; i < FontSetSize; i++) {
