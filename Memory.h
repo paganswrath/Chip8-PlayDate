@@ -38,7 +38,6 @@ void LoadRom(const char *Path){
 	}
 	else {
 		PD->system->logToConsole("Rom Failed To Load \n");
-		return 0;
 	}
 	
 	PD->file->close(Rom);

@@ -10,6 +10,87 @@ static LCDFont* Font = NULL;
 __declspec(dllexport)
 #endif
 
+bool LoadFlag = true;
+
+static int XOff = 7;
+static int YOff = 24;
+static int Cursor = 0;
+static int Delay = 0;
+static int GameID = 0;
+
+
+static void UpdateInputs(){
+	PDButtons Current;
+	PDButtons Released;
+	PD->system->getButtonState(&Current, NULL, &Released);
+	switch (GameID)
+	{
+		case 1:
+			if (Current & kButtonUp){
+				SystemKey = Key1;
+			}
+			if (Released & kButtonUp){
+				SystemKey = KeyNull;
+			}
+
+			if (Current & kButtonDown){
+				SystemKey = KeyQ;
+			}
+			if (Released & kButtonDown){
+				SystemKey = KeyNull;
+			}
+			break;
+		case 2:
+			if (Current & kButtonUp){
+				SystemKey = KeyS;
+			}
+			if (Released & kButtonUp){
+				SystemKey = KeyNull;
+			}
+			break;
+		case 3:
+			if (Current & kButtonA){
+				SystemKey = KeyW;
+			}
+			if (Released & kButtonA){
+				SystemKey = KeyNull;
+			}
+
+			if (Current & kButtonLeft){
+				SystemKey = KeyQ;
+			}
+			if (Released & kButtonLeft){
+				SystemKey = KeyNull;
+			}
+
+			if (Current & kButtonRight){
+				SystemKey = KeyE;
+			}
+			if (Released & kButtonRight){
+				SystemKey = KeyNull;
+			}
+			break;
+		case 4:
+			if (Current & kButtonRight){
+				SystemKey = KeyE;
+			}
+			if (Released & kButtonRight){
+				SystemKey = KeyNull;
+			}
+
+			if (Current & kButtonLeft){
+				SystemKey = KeyQ;
+			}
+			if (Released & kButtonLeft){
+				SystemKey = KeyNull;
+			}
+			break;
+		
+		default:
+			break;
+	}
+}
+
 void SetPlayDateApi(PlaydateAPI* p) {
 	PD = p;
 }
@@ -34,19 +115,8 @@ int eventHandler(PlaydateAPI* PlayDate, PDSystemEvent Event, uint32_t Arg)
 	return 0;
 }
 
-bool LoadFlag = true;
-
-static int XOff = 7;
-static int YOff = 24;
-static int Cursor = 0;
-static int Delay = 0;
-static int GameID;
-
-
 static int Update(void* userdata)
 {
-
-	
 
 	if (LoadFlag){
 		InitMemory();
@@ -62,92 +132,15 @@ static int Update(void* userdata)
 	if (RomLoaded){
 		PD->graphics->drawText("CHIP8", strlen("CHIP8"), kASCIIEncoding, 400 / 2 - (5 * 6.6) / 2 , 3);
 		PD->graphics->drawText("Crank To Go Home", strlen("Crank To Go Home"), kASCIIEncoding, 400 / 2 - (17 * 6.6) / 2 , 240 - 20);
-		PDButtons Current;
-		PDButtons Released;
-		PD->system->getButtonState(&Current, NULL, &Released);
-		switch (GameID)
-		{
-			case 1:
-				if (Current & kButtonUp){
-					SystemKey = 0x0001;
-				}
-				if (Released & kButtonUp){
-					SystemKey = 0x00FF;
-				}
 
-				if (Current & kButtonDown){
-					SystemKey = 0x0004;
-				}
-				if (Released & kButtonDown){
-					SystemKey = 0x00FF;
-				}
-				break;
-			case 2:
-				if (Current & kButtonUp){
-					SystemKey = 0x0008;
-				}
-				if (Released & kButtonUp){
-					SystemKey = 0x00FF;
-				}
-				break;
-			case 3:
-				if (Current & kButtonA){
-					SystemKey = 0x0005;
-				}
-				if (Released & kButtonA){
-					SystemKey = 0x00FF;
-				}
-
-				if (Current & kButtonLeft){
-					SystemKey = 0x0004;
-				}
-				if (Released & kButtonLeft){
-					SystemKey = 0x00FF;
-				}
-
-				if (Current & kButtonRight){
-					SystemKey = 0x006;
-				}
-				if (Released & kButtonRight){
-					SystemKey = 0x00FF;
-				}
-				break;
-			case 4:
-				if (Current & kButtonRight){
-					SystemKey = 0x0006;
-				}
-				if (Released & kButtonRight){
-					SystemKey = 0x00FF;
-				}
-
-				if (Current & kButtonLeft){
-					SystemKey = 0x0004;
-				}
-				if (Released & kButtonLeft){
-					SystemKey = 0x00FF;
-				}
-				break;
-			
-			default:
-				break;
-		}
+		UpdateInputs();
 
 		RunCycle(); 
-		
-		for (int x = 0 ; x < ScreenWidth; x ++){
-			for (int y = 0 ; y < ScreenHeight; y ++){
-				if (ScreenMemory[x][y] == 1){
-					PD->graphics->fillRect((x * ScreenScale ) + XOff,(y * ScreenScale ) + YOff, 1* ScreenScale, 1* ScreenScale, kColorWhite);
-				}
-				else {
-					PD->graphics->fillRect((x * ScreenScale ) + XOff,(y * ScreenScale ) + YOff, 1* ScreenScale, 1* ScreenScale, kColorBlack);
-				}
-			}
-		}
 
+		DrawScreen();
 		
 		if (!PD->system->isCrankDocked()){
-			if (PD->system->getCrankChange() != 0){
+			if (PD->system->getCrankChange() > 15 || PD->system->getCrankChange() < 15){
 				RomLoaded = false;
 				LoadFlag = true;
 			}
@@ -239,6 +232,5 @@ static int Update(void* userdata)
 		}
 		
 	}
-	
 	return 1;
 }
