@@ -25,7 +25,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg)
 		const char* err;
 
 		setPDPtr(playdate);
-		playdate->display->setRefreshRate(0);
+		playdate->display->setRefreshRate(50);
 		Font = pd->graphics->loadFont(FontPath , &err);
 		pd->system->setUpdateCallback(update, NULL);
 
@@ -59,12 +59,10 @@ static int update(void* userdata)
 
 	pd->graphics->setFont(Font);
 
-	pd->graphics->drawText("CHIP8 PlayDate", strlen("CHIP8 PlayDate"), kASCIIEncoding, 400 / 2 - 99 / 2 , 4);
-
-	
 
 	if (RomLoaded){
-
+		pd->graphics->drawText("CHIP8", strlen("CHIP8"), kASCIIEncoding, 400 / 2 - (5 * 6.6) / 2 , 3);
+		pd->graphics->drawText("Crank To Go Home", strlen("Crank To Go Home"), kASCIIEncoding, 400 / 2 - (17 * 6.6) / 2 , 240 - 20);
 		PDButtons Current;
 		PDButtons Released;
 		pd->system->getButtonState(&Current, NULL, &Released);
@@ -82,6 +80,14 @@ static int update(void* userdata)
 					SystemKey = 0x0004;
 				}
 				if (Released & kButtonDown){
+					SystemKey = 0x00FF;
+				}
+				break;
+			case 2:
+				if (Current & kButtonUp){
+					SystemKey = 0x0008;
+				}
+				if (Released & kButtonUp){
 					SystemKey = 0x00FF;
 				}
 				break;
@@ -107,6 +113,21 @@ static int update(void* userdata)
 					SystemKey = 0x00FF;
 				}
 				break;
+			case 4:
+				if (Current & kButtonRight){
+					SystemKey = 0x0006;
+				}
+				if (Released & kButtonRight){
+					SystemKey = 0x00FF;
+				}
+
+				if (Current & kButtonLeft){
+					SystemKey = 0x0004;
+				}
+				if (Released & kButtonLeft){
+					SystemKey = 0x00FF;
+				}
+				break;
 			
 			default:
 				break;
@@ -124,10 +145,19 @@ static int update(void* userdata)
 				}
 			}
 		}
+
+		
+		if (!pd->system->isCrankDocked()){
+			if (pd->system->getCrankChange() != 0){
+				RomLoaded = false;
+				FirstLoad = true;
+			}
+		}
 	}
 	else {
-		pd->graphics->drawText("Select Game:", strlen("Select Game:"), kASCIIEncoding, 400 / 2 - 86 / 2 , 50);
+		pd->graphics->drawText("Select Game:", strlen("Select Game:"), kASCIIEncoding, 400 / 2 - 86 / 2 , 30);
 		pd->graphics->drawRect(5,100,390, 125, kColorBlack);
+		pd->graphics->drawRect(2,97,396, 131, kColorBlack);
 
 		for (int i = 0 ; i < 5 ; i ++){
 			pd->graphics->drawRect(5,100 + i * 25,390, 25, kColorBlack);
@@ -143,7 +173,7 @@ static int update(void* userdata)
 					pd->graphics->drawText("PONG", strlen("PONG"), kASCIIEncoding, 400 / 2 - ( 4 * 6.6) / 2 , (100 + i * 25) + 2);
 					break;
 				case 2:
-					pd->graphics->drawText("TETRIS", strlen("TETRIS"), kASCIIEncoding, 400 / 2 - ( 7 * 6.6) / 2 , (100 + i * 25) + 2);
+					pd->graphics->drawText("MISSILE", strlen("MISSILE"), kASCIIEncoding, 400 / 2 - ( 8 * 6.6) / 2 , (100 + i * 25) + 2);
 					break;
 				case 3:
 					pd->graphics->drawText("SPACE INVADERS", strlen("SPACE INVADERS"), kASCIIEncoding, 400 / 2 - ( 15 * 6.6) / 2 , (100 + i * 25) + 2);
@@ -191,7 +221,7 @@ static int update(void* userdata)
 					LoadRom("PONG.bin");
 					break;
 				case 2:
-					LoadRom("TETRIS.bin");
+					LoadRom("MISSILE.bin");
 					break;
 				case 3:
 					LoadRom("SPACE.bin");
