@@ -33,6 +33,7 @@ static unsigned char SystemKey = 0x0006;
 
 int FrameTimer = 0;
 bool HighPreformance = false;
+int Speed = 1;
 
 bool RomLoaded = false;
 
@@ -262,7 +263,7 @@ void RunCycle(){
 
 void RunCycleFast(){
 
-	for (int P = 0 ; P <= 2; P++){
+	for (int P = 0 ; P <= Speed; P++){
 		if (SystemDelayTimer > 0)SystemDelayTimer --;
 
 		if (SystemSoundTimer > 0) {

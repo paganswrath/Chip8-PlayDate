@@ -83,9 +83,11 @@ static void MapInputsCallBack(){
 }
 
 static void MaxCallBack(){
-	if (HighPreformance)HighPreformance = false;
-	else {
-		HighPreformance = true;
+	Speed ++;
+	if (Speed <= 2)HighPreformance = true;
+	if (Speed == 4){
+		Speed = 1;
+		HighPreformance = false;
 	}
 }
 static void RebootCallBack(){
@@ -213,8 +215,7 @@ int eventHandler(PlaydateAPI* PlayDate, PDSystemEvent Event, uint32_t Arg)
 		Font = PD->graphics->loadFont(FontPath , &Error);
 		ScreenMask = LoadPng("Mask"); 
 		PDMenuItem *MenuItem2 = PD->system->addMenuItem("Reboot", RebootCallBack, NULL);
-		PDMenuItem *MenuItem4 = PD->system->addMenuItem("Fast CPU()", MaxCallBack, NULL);
-		PDMenuItem *MenuItem3 = PD->system->addMenuItem("Interlaced", InterlacedCallBack, NULL);
+		PDMenuItem *MenuItem4 = PD->system->addMenuItem("CPU ++", MaxCallBack, NULL);
 		PDMenuItem *MenuItem1 = PD->system->addMenuItem("Map Inputs", MapInputsCallBack, NULL);
 		PD->system->setUpdateCallback(Update, NULL);
 
