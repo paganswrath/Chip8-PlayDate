@@ -44,6 +44,7 @@ void LoadRom(const char *Path){
 }
 
 void LoadCustomRom(const char *Path){
+	PD->file->mkdir("Roms Go Here!");
 	int FileSize = 0;
 	SDFile* Rom = NULL;	
 	Rom = PD->file->open(Path, kFileReadData);
