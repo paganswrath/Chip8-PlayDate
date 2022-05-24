@@ -22,10 +22,19 @@ Note: This Emulator Uses Some Code From **Mathew Mikolay's Chip8 Project**
 
   
 
-1.  **Download The Latest .pdx File**
+ 1.  **Download The Latest .pdx File**
 
-2. Go to https://play.date/account/sideload/
+ 2. Go to https://play.date/account/sideload/
 
-3. Drag and Drop The **PDX** into The Website
+ 3. Drag and Drop The **PDX** into The Website
 
-4. Open Your PlayDate and Install The Emulator
+ 4. Open Your PlayDate and Install The Emulator
+
+**Custom Rom Loading**
+--
+* Note: You Will Have to Go into the Menu and Map the Inputs For Your Game
+* Note: You Do not have to Load Anything.. 4 Roms are Included. 
+ 1. Go Into Playdates Settings and Reboot into Data Disk Mode 
+ 2. Then Rename Your Rom File to "Rom.bin"
+ 3. Move the File into The Emulators Data Folder
+ 4. Launch it From the Emulator
