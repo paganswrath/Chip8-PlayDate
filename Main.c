@@ -253,12 +253,12 @@ static int Update(void* userdata)
 
 			if (HighPreformance){
 				RunCycleFast(); 
+				for (int P = 0 ; P <= Speed; P++)DrawScreen();
 			}
 			else {
 				RunCycle(); 
+				DrawScreen();
 			}
-
-			DrawScreen();
 			
 		}
 		else {
