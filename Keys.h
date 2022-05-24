@@ -17,3 +17,12 @@ static int KeyC = 0x000B;
 static int KeyV = 0x000F;
 
 static int KeyNull = 0x00FF;
+
+
+static int UpMapping = 0x00FF;
+static int DownMapping = 0x00FF;
+static int LeftMapping = 0x00FF;
+static int RightMapping = 0x00FF;
+
+static int AMapping = 0x00FF;
+static int SMapping = 0x00FF;

@@ -43,6 +43,36 @@ void LoadRom(const char *Path){
 	PD->file->close(Rom);
 }
 
+void LoadCustomRom(const char *Path){
+	int FileSize = 0;
+	SDFile* Rom = NULL;	
+	Rom = PD->file->open(Path, kFileReadData);
+
+	PD->file->seek(Rom, 0, SEEK_END);
+	FileSize = PD->file->tell(Rom);
+    PD->file->seek(Rom, 0, SEEK_SET);
+
+	PD->file->read(Rom, SystemMemory + 0x200, FileSize);
+
+	if (Rom != NULL){
+		PD->system->logToConsole("Loaded Rom Successfully \n");
+		RomLoaded = true;
+	}
+	else {
+		PD->system->logToConsole("Rom Failed To Load \n");
+	}
+	
+	PD->file->close(Rom);
+}
+
+
+LCDBitmap *LoadPng(const char *Path)
+{
+	const char *Error = NULL;
+	LCDBitmap *Image = PD->graphics->loadBitmap(Path, &Error);
+	return Image;
+}
+
 
 void InitMemory(){
 	memset(SystemMemory , 0 , sizeof(SystemMemory));
