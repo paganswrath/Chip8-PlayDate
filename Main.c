@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "Memory.h"
 
 static int Update(void* userdata);
@@ -85,7 +86,7 @@ static void MapInputsCallBack(){
 static void MaxCallBack(){
 	Speed ++;
 	if (Speed <= 2)HighPreformance = true;
-	if (Speed == 4){
+	if (Speed == 5){
 		Speed = 1;
 		HighPreformance = false;
 	}
@@ -249,11 +250,18 @@ static int Update(void* userdata)
 
 		if (RomLoaded){
 			PD->graphics->drawText("CHIP8", strlen("CHIP8"), kASCIIEncoding, 400 / 2 - (5 * 6.6) / 2 , 3);
+			
 			UpdateInputs();
 
 			if (HighPreformance){
-				RunCycleFast(); 
-				for (int P = 0 ; P <= Speed; P++)DrawScreen();
+				if (Speed < 5){
+					RunCycleFast(); 
+					for (int P = 0 ; P <= Speed; P++)DrawScreen();
+				}
+				else {
+					RunCycleFast(); 
+					DrawScreen();
+				}
 			}
 			else {
 				RunCycle(); 
@@ -492,19 +500,10 @@ static int Update(void* userdata)
 
 			if (Current & kButtonDown && Delay == 0 && InputCursor < 15){
 				InputCursor ++;
-				if(UpMapping == GetKepMapping(InputCursor))InputCursor ++;
-				if(DownMapping == GetKepMapping(InputCursor))InputCursor ++;
-				if(LeftMapping == GetKepMapping(InputCursor))InputCursor ++;
-				if(RightMapping == GetKepMapping(InputCursor))InputCursor ++;
-
 				Delay = 50;
 			}
 			if (Current & kButtonUp && Delay == 0 && InputCursor > 0){
 				InputCursor --;
-				if(UpMapping == GetKepMapping(InputCursor))InputCursor --;
-				if(DownMapping == GetKepMapping(InputCursor))InputCursor --;
-				if(LeftMapping == GetKepMapping(InputCursor))InputCursor --;
-				if(RightMapping == GetKepMapping(InputCursor))InputCursor --;
 				Delay = 50;
 			}
 

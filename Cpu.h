@@ -263,6 +263,12 @@ void RunCycle(){
 
 void RunCycleFast(){
 
+	int CurrentSpeed = Speed;
+
+	if (Speed == 5){
+		CurrentSpeed = 4;
+	}
+
 	for (int P = 0 ; P <= Speed; P++){
 		if (SystemDelayTimer > 0)SystemDelayTimer --;
 
