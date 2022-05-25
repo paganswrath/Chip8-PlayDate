@@ -3,8 +3,8 @@ STACK_SIZE     = 61800
 
 PRODUCT = Game.pdx
 
-# Locate the SDK
-SDK = /home/ewan/Downloads/PlaydateSDK-1.11.0
+# Locate the SDK 
+SDK = ${PLAYDATE_SDK_PATH}
 ifeq ($(SDK),)
 SDK = $(shell egrep '^\s*SDKRoot' ~/.Playdate/config | head -n 1 | cut -c9-)
 endif
