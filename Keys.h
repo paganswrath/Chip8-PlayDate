@@ -25,4 +25,4 @@ static int LeftMapping = 0x00FF;
 static int RightMapping = 0x00FF;
 
 static int AMapping = 0x00FF;
-static int SMapping = 0x00FF;
+static int BMapping = 0x00FF;

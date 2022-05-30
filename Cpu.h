@@ -29,6 +29,7 @@ static unsigned short SystemStackPointer = 0;
 static unsigned char SystemDelayTimer = 0 ;
 static unsigned char SystemSoundTimer = 0;
 static unsigned char SystemKey = 0x0006;
+static bool SystemOn = true;
 
 
 int FrameTimer = 0;

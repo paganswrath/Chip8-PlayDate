@@ -22,6 +22,8 @@ static bool SetInputs = false;
 static int InputCursor = 0;
 static bool InputCursorSelected = false;
 static bool Skip = true;
+static PDMenuItem *CpuSpeedMenuItem;
+
 
 int GetKepMapping(int ID){
 	switch (ID)
@@ -80,21 +82,44 @@ int GetKepMapping(int ID){
 }
 
 static void MapInputsCallBack(){
-	SetInputs = true;
+
+	if (!SetInputs)SetInputs = true;
+	if (SetInputs)SetInputs = false;
 }
 
-static void MaxCallBack(){
-	Speed ++;
-	if (Speed <= 2)HighPreformance = true;
-	if (Speed == 5){
-		Speed = 1;
-		HighPreformance = false;
+static void CpuSpeedCallBack(){ 
+	int Option = PD->system->getMenuItemValue(CpuSpeedMenuItem);
+
+	switch (Option){
+		case 0:
+			HighPreformance = false;
+			Speed = 1;
+			break;
+		case 1:
+			HighPreformance = true;
+			Speed = 2;
+			break;
+		case 2:
+			HighPreformance = true;
+			Speed = 3;
+			break;
+		case 3:
+			HighPreformance = true;
+			Speed = 4;
+			break;
+		case 4:
+			HighPreformance = true;
+			Speed = 0;
+			SystemOn = false;
+			break;
 	}
+
+	if (Option != 4)SystemOn = true;
 }
+
 static void RebootCallBack(){
 	RomLoaded = false;
 	LoadFlag = true;
-
 	SetInputs = false;
 }
 
@@ -127,7 +152,7 @@ static void UpdateInputs(){
 			if (Current & kButtonA){SystemKey = AMapping;}
 			if (Released & kButtonA){SystemKey = KeyNull;}
 
-			if (Current & kButtonB){SystemKey = SMapping;}
+			if (Current & kButtonB){SystemKey = BMapping;}
 			if (Released & kButtonB){SystemKey = KeyNull;}
 
 			break;
@@ -216,8 +241,9 @@ int eventHandler(PlaydateAPI* PlayDate, PDSystemEvent Event, uint32_t Arg)
 		Font = PD->graphics->loadFont(FontPath , &Error);
 		ScreenMask = LoadPng("Mask"); 
 		PDMenuItem *MenuItem2 = PD->system->addMenuItem("Reboot", RebootCallBack, NULL);
-		PDMenuItem *MenuItem4 = PD->system->addMenuItem("CPU ++", MaxCallBack, NULL);
 		PDMenuItem *MenuItem1 = PD->system->addMenuItem("Map Inputs", MapInputsCallBack, NULL);
+		const char *CpuMenuOption[] = {"Low","Med", "High", "Max" , "Off"};
+		CpuSpeedMenuItem = PD->system->addOptionsMenuItem("Cpu", CpuMenuOption, 5, CpuSpeedCallBack, NULL);
 		PD->system->setUpdateCallback(Update, NULL);
 
 	}
@@ -253,19 +279,24 @@ static int Update(void* userdata)
 			
 			UpdateInputs();
 
-			if (HighPreformance){
-				if (Speed < 5){
-					RunCycleFast(); 
-					for (int P = 0 ; P <= Speed; P++)DrawScreen();
+			if (SystemOn){
+				if (HighPreformance){
+					if (Speed < 5){
+						RunCycleFast(); 
+						if (Speed != 4)for (int P = 0 ; P <= Speed; P++)DrawScreen();
+						else {
+							DrawScreen();
+						}
+					}
+					else {
+						RunCycleFast(); 
+						DrawScreen();
+					}
 				}
 				else {
-					RunCycleFast(); 
+					RunCycle(); 
 					DrawScreen();
 				}
-			}
-			else {
-				RunCycle(); 
-				DrawScreen();
 			}
 			
 		}
@@ -470,7 +501,7 @@ static int Update(void* userdata)
 				if (AMapping == GetKepMapping(i)){
 					PD->graphics->drawText("- Mapped To A", strlen("- Mapped To A"), kASCIIEncoding, 15 + 50  ,30 + i  * 20);
 				}
-				if (SMapping == GetKepMapping(i)){
+				if (BMapping == GetKepMapping(i)){
 					PD->graphics->drawText("- Mapped To B", strlen("- Mapped To B"), kASCIIEncoding, 15 + 50  ,30 + i  * 20);
 				}
 			}
@@ -490,7 +521,7 @@ static int Update(void* userdata)
 				if (AMapping == GetKepMapping(i)){
 					PD->graphics->drawText("- Mapped To A", strlen("- Mapped To A"), kASCIIEncoding, 15 + 50 + 195 ,30 + (i - 8) * 20);
 				}
-				if (SMapping == GetKepMapping(i)){
+				if (BMapping == GetKepMapping(i)){
 					PD->graphics->drawText("- Mapped To B", strlen("- Mapped To B"), kASCIIEncoding, 15 + 50 + 195 ,30 + (i - 8) * 20);
 				}
 			}
@@ -554,9 +585,9 @@ static int Update(void* userdata)
 					InputCursorSelected = false;
 				}
 				if (Current & kButtonB){
-					if (InputCursor == 0 || InputCursor == 1)SMapping = GetKepMapping(InputCursor);
+					if (InputCursor == 0 || InputCursor == 1)BMapping = GetKepMapping(InputCursor);
 					else {
-						SMapping = GetKepMapping(InputCursor + 1);
+						BMapping = GetKepMapping(InputCursor + 1);
 					}
 					InputCursor = 0;
 					InputCursorSelected = false;
