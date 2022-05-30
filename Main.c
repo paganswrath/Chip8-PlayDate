@@ -83,8 +83,8 @@ int GetKepMapping(int ID){
 
 static void MapInputsCallBack(){
 
-	if (!SetInputs)SetInputs = true;
-	if (SetInputs)SetInputs = false;
+	SetInputs = true;
+
 }
 
 static void CpuSpeedCallBack(){ 
