@@ -34,6 +34,7 @@ Note: This Emulator Uses Some Code From **Mathew Mikolay's Chip8 Project**
 --
 * Note: You Will Have to Go into the Menu and Map the Inputs For Your Game
 * Note: You Do not have to Load Anything.. 4 Roms are Included. 
+* Note: When Using the CPU Max Mode, Drawing May be in accurate with Curtain Roms. However It Is Extremely Fast. 
  1. Go Into Playdates Settings and Reboot into Data Disk Mode 
  2. Then Rename Your Rom File to "Rom.bin"
  3. Move the File into The Emulators Data Folder
